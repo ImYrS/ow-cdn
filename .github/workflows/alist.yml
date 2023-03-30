@@ -1,0 +1,34 @@
+name: Alist FE Update
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+jobs:
+  main:
+    name: Alist FE Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Packages
+        shell: bash
+        run: pip install requests
+      - name: Get Updates
+        id: update
+        shell: bash
+        run: python app.py
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          DIR: 'static/web/alist-web'
+      - name: Commit and Push
+        shell: bash
+        if: ${{ steps.update.outputs.updated == 'true' }}
+        run: |
+          git config user.name "Alist FE Update"
+          git config user.email "i@imyrs.com"
+          git add static/web/alist-web
+          git commit -m "chore: update alist-web"
+          git push
