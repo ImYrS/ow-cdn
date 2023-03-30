@@ -19,7 +19,7 @@ jobs:
       - name: Get Updates
         id: update
         shell: bash
-        run: python app.py
+        run: python .workers/alist.py
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           DIR: 'static/web/alist-web'
